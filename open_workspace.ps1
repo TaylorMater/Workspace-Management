@@ -8,8 +8,6 @@
 #outlook_path
 #slack_path
 
-#where/how do you properly inject these paths?
-
 
 ########################################################################################
 
@@ -48,12 +46,16 @@ foreach ($url in $urls) {
                 Write-Host "No valid URLs found to open in this window."
             }
 
-            $currentUrls.Clear() # Clear list for the next window
+            $currentUrls = @() #avoid using .Clear() because powershell will drop the array identity if it contains only one item and .Clear() is an array method
         }
     } else {
         # Add only non-empty, trimmed URLs to the list
         $url = $url.Trim() # Remove any surrounding whitespace
-        if ($url -ne "") { $currentUrls += $url }
+        
+        #further, we want to trim the final ',' from the url if it exists, TrimEnd(',') does that for us
+        if ($url -ne "") { 
+            $currentUrls += $url.TrimEnd(',')
+        }
     }
 }
 
